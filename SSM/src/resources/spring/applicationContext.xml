@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd">
+
+    <context:component-scan base-package="com.study">
+        <!--除了控制器其他都扫-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!--读取jdbc配置文件信息-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--1. 配置数据源-->
+    <bean id="ds" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+    </bean>
+    <!--配置使用mybatis操作数据库-->
+    <!--可以根据配置文件得到sqlSessionFactory-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+        <property name="dataSource" ref="ds"/>
+        <!--指定xml映射文件的位置-->
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"></property>
+    </bean>
+        <!--我们要把每一个dao接口的实现加入到ioc容器中-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--&lt;!&ndash;指定dao接口所在的包&ndash;&gt;-->
+        <!--<property name="basePackage" value="com.study.dao"></property>-->
+    <!--</bean>-->
+    <!--也可以用mybatis-spring名称空间注入-->
+    <mybatis-spring:scan base-package="com.study.dao"/>
+
+    <!--配置事务控制；配置事务管理器，让他控制住数据源里面的连接的关闭和提交-->
+    <bean id="tm" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds"></property>
+    </bean>
+
+    <!--基于xml配置，配置事务；哪些方法切入事务还要写切入点表达式-->
+    <aop:config>
+        <!--配置切入点表达式-->
+        <aop:pointcut expression="execution(* com.study.service.*.*(..))" id="txPoint"/>
+        <aop:advisor advice-ref="myTx" pointcut-ref="txPoint"/>
+    </aop:config>
+
+    <!--配置事务建议
+    transaction-manager="tm":指定要配置的事务管理器的id
+    -->
+    <tx:advice id="myTx" transaction-manager="tm">
+        <tx:attributes>
+            <tx:method name="*" rollback-for="java.lang.Exception"/>
+            <tx:method name="get*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+</beans>

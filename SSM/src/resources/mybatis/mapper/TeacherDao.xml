@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:名称空间；写接口的全类名，相当于告诉MyBatis这个配置文件是实现哪个接口的；-->
+<mapper namespace="com.study.dao.TeacherDao">
+    <resultMap id="myTeacher" type="com.study.bean.Teacher">
+        <id property="id" column="id"/>
+        <result property="name" column="teachername"/>
+        <result property="course" column="class_name"/>
+        <result property="address" column="address"/>
+        <result property="birth" column="birth_date"/>
+    </resultMap>
+    <!-- public Teacher getTeacherById(Integer id);-->
+    <select id="getTeacherById" resultMap="myTeacher">
+        select * from t_teacher where id=#{id}
+    </select>
+</mapper>
+<!---->

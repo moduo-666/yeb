@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--2. setting 这是Mybatis 中极为重要的调整设置，它们会改变MyBatis的运行时行为。-->
+    <settings>
+        <!--name配置项的key；value：配置项的值-->
+        <!--loginAccount  login_account-->
+        <!--mapUnderscoreToCamelCase:是否遵循驼峰命名规则-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--开启延迟加载开关-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--开启属性按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--开启全局缓存开关；-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+</configuration>
