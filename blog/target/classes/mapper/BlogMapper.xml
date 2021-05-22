@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moduo.mapper.BlogMapper">
+    <!--getListByTypeId-->
+    <select id="getListByTypeId" resultType="com.moduo.pojo.Blog">
+        select * from t_blog where typeid = #{typeid}
+    </select>
+    <!--getTagsByBlogId-->
+    <select id="getTagsByBlogId" resultType="com.moduo.pojo.Tag">
+        select
+            t.id ,
+            t.name
+            from
+            t_blog b,
+            t_tag t,
+            t_blogtags bt
+            where
+            b.id = bt.bid
+            and
+            t.id = bt.tid
+            and
+            b.id = #{id}
+    </select>
+    <!--findGroupYear-->
+    <select id="findGroupYear" resultType="java.lang.String">
+       select DATE_FORMAT(t_blog.updateTime,'%Y') as year from t_blog GROUP by year order by year desc ;
+    </select>
+    <select id="findBlogsByYear" resultType="com.moduo.pojo.Blog">
+        SELECT * from t_blog b where date_format(b.updateTime,'%Y') = #{year};
+    </select>
+</mapper>

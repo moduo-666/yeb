@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moduo.mapper.BlogTagsMapper">
+    <!--updateBlogTags-->
+    <insert id="updateBlogTags">
+        insert into t_blogtags(bid,tid) values
+        <foreach collection="tids" item="tid" separator=",">
+            (#{bid},#{tid})
+        </foreach>
+    </insert>
+    <!--getListByBid-->
+    <select id="getListByBid" resultType="com.moduo.pojo.BlogTags">
+        select * from t_blogtags where bid = #{bid}
+    </select>
+    <!--getBlogsByTagId-->
+    <select id="getBlogsByTagId" resultType="com.moduo.pojo.Blog">
+        SELECT
+        t_blog.*
+        FROM
+        t_blogtags,
+        t_blog
+        where
+        t_blogtags.bid = t_blog.id
+        and
+        t_blogtags.tid=#{tid}
+    </select>
+</mapper>
