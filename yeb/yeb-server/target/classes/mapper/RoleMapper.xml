@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.server.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxx.server.pojo.Role">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="nameZh" property="nameZh" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, nameZh
+    </sql>
+    <!--根据用户获取角色-->
+    <select id="getRoles" resultType="com.xxx.server.pojo.Role">
+        select
+        r.id,
+        r.name,
+        r.nameZh
+        from
+        t_admin as a,
+        t_admin_role as ar,
+        t_role as r
+        where
+        a.id = ar.adminId
+        and
+        ar.rid = r.id
+        and
+        a.id = #{adminId}
+    </select>
+</mapper>
