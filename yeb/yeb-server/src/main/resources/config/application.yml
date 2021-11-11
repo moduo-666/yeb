@@ -29,7 +29,7 @@ spring:
     #超时时间
     timeout: 10000ms
     #服务器地址
-    host: 159.75.76.242
+    host: localhost
     #服务器端口
     port: 6379
     #数据库
@@ -53,7 +53,7 @@ spring:
     # 密码
     password: 123456
     # 服务器地址
-    host: 159.75.76.242
+    host: localhost
     # 端口
     port: 5672
     # 消息确认回调
